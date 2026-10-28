@@ -39,6 +39,11 @@
       cursor:pointer;padding:0 4px;white-space:nowrap}
   .qb.on{border-color:var(--gold);background:var(--goldbg);color:var(--gold)}
 
+  .whenbar{background:var(--goldbg);border:2px solid #EADFC4;border-radius:12px;
+           padding:13px 14px;margin-bottom:15px;text-align:center;font-size:15px;
+           color:#6B5320;line-height:1.6}
+  .whenbar b{display:block;font-size:20px;font-weight:700;color:var(--ink);margin-top:4px}
+  .whenbar .nudge{display:block;font-size:12.5px;color:var(--muted);margin-top:7px}
   .qrbox{text-align:center;padding:6px 0 0}
   .qrsvg{width:100%;max-width:340px;height:auto;margin:0 auto;display:block;
          background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
@@ -107,6 +112,7 @@
 
   <div class="card">
     <div class="ch noprint">3 · 가이드에게 보내기</div>
+    <div class="whenbar" id="whenbar"></div>
     <div class="qrbox">
       <div id="qr"></div>
       <div class="cap" id="cap"></div>
@@ -2510,6 +2516,15 @@ function build(){
   $("cap").innerHTML = bits.length
     ? esc(bits.join(" · ")) + '<span>휴대폰 카메라로 비추면 바로 열립니다</span>'
     : '<span>휴대폰 카메라로 비추면 바로 열립니다</span>';
+
+  /* ★ 보내기 전에 날짜가 눈에 걸리도록 — 이게 틀리면 그날 목록에 안 뜹니다 */
+  const wb = $("whenbar");
+  if (!S.date){ wb.innerHTML = '날짜를 먼저 골라주세요'; return; }
+  const dn = (S.date === dPlus(0)) ? "오늘" : (S.date === dPlus(1)) ? "내일" : (S.date === dPlus(2)) ? "모레" : "";
+  wb.innerHTML = '이 QR로 접수하면<b>' + esc(prettyDate(S.date)) + (dn ? " · " + dn : "") + ' 방문</b>으로 기록됩니다'
+    + '<span class="nudge">체크리스트 앱에서는 '
+    + (dn === "오늘" ? '「오늘 방문」' : dn === "내일" ? '「내일 예약」' : '그 날짜')
+    + '에서 찾으시면 됩니다</span>';
 }
 
 /* ── 링크 복사 ── */
